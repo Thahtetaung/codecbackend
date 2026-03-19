@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\ProjectMedia;
+use App\Models\Subcategory;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -12,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('forms.projects.create');
+        
     }
 
     /**
@@ -20,7 +23,10 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        $subcategories = Subcategory::all();
+        return view('forms.projects.create' , compact('categories','subcategories'));
+    
     }
 
     /**
@@ -28,7 +34,18 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => ['string' , 'required' , 'max:50'],
+            'category_id' => ['required' , 'exists:categories,id'],
+            'subcategory_id' => ['required' , 'exists:subcategories,id']
+        ]);
+
+        Project::create($validated);
+        ProjectMedia::create([
+            'category_id' => $request->category_id,
+            'subcategory_id' => $request->subcategory_id
+        ]);
+        return redirect ('/');
     }
 
     /**

@@ -8,4 +8,5 @@ Route::get('/', function () {
     return view('pages.index');
 });
 
-Route::get('/project/create' , [ProjectController::class , 'index']);
+Route::get('/projects' , [ProjectController::class , 'create']);
+Route::post('/projects' , [ProjectController::class , 'store']);

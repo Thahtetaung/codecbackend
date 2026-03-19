@@ -1,5 +1,4 @@
-<x-layout>
+<x-layout.admin>
 
-    <h1>Here will come the homepage</h1>
-    
-</x-layout>
+
+</x-layout.admin>

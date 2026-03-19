@@ -7,10 +7,10 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-    <div class="flex bg-gray-200">
+    <div class="flex bg-gray-200 min-h-screen">
         <x-navbar />
 
-        <main class="border-2 border-green-400 mx-auto">
+        <main class="mx-auto">
 
             {{$slot}}
 

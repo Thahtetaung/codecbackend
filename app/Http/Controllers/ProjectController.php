@@ -10,73 +10,48 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        
-    }
+    public function index() {}
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $categories = Category::all();
         $subcategories = Subcategory::all();
-        return view('forms.projects.create' , compact('categories','subcategories'));
-    
+        return view('forms.projects.create', compact('categories', 'subcategories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['string' , 'required' , 'max:50'],
-            'category_id' => ['required' , 'exists:categories,id'],
-            'subcategory_id' => ['required' , 'exists:subcategories,id']
+            'title'          => ['required', 'string', 'max:50'],
+            'category_id'    => ['required', 'exists:categories,id'],
+            'subcategory_id' => ['required', 'exists:subcategories,id'],
+            'thumbnail'      => ['required', 'array', 'min:1'],
+            'thumbnail.*'    => ['image', 'max:10240'],
         ]);
 
-        Project::create($validated);
-        ProjectMedia::create([
-            'category_id' => $request->category_id,
-            'subcategory_id' => $request->subcategory_id
+        $project = Project::create([
+            'title' => $validated['title'],
         ]);
-        return redirect ('/');
+
+        foreach ($request->file('thumbnail') as $file) {
+            $path = $file->store('projects', 'public');
+
+            ProjectMedia::create([
+                'project_id'     => $project->id,
+                'thumbnail'      => $path,
+                'category_id'    => $validated['category_id'],
+                'subcategory_id' => $validated['subcategory_id'],
+            ]);
+        }
+
+        return redirect('/projects')->with('success', 'Project created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
-    {
-        //
-    }
+    public function show(Project $project) {}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project)
-    {
-        //
-    }
+    public function edit(Project $project) {}
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Project $project)
-    {
-        //
-    }
+    public function update(Request $request, Project $project) {}
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Project $project)
-    {
-        //
-    }
+    public function destroy(Project $project) {}
 }

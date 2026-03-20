@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ProjectMedia extends Model
 
 {
-    protected $fillable = ['project_id', 'file_path', 'type', 'category_id', 'subcategory_id'];
+    protected $fillable = ['project_id', 'thumbnail', 'type', 'category_id', 'subcategory_id'];
     use HasFactory;
 
     public function project()
